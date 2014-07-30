@@ -105,25 +105,25 @@ package starling.textures
         /** @private */
         public function Texture()
         {
-            if (Capabilities.isDebugger && 
+            if (Capabilities.isDebugger &&
                 getQualifiedClassName(this) == "starling.textures::Texture")
             {
                 throw new AbstractClassError();
             }
         }
-        
-        /** Disposes the underlying texture data. Note that not all textures need to be disposed: 
+
+        /** Disposes the underlying texture data. Note that not all textures need to be disposed:
          *  SubTextures (created with 'Texture.fromTexture') just reference other textures and
-         *  and do not take up resources themselves; this is also true for textures from an 
+         *  and do not take up resources themselves; this is also true for textures from an
          *  atlas. */
         public function dispose():void
-        { 
+        {
             // override in subclasses
         }
-        
+
         /** Creates a texture object from any of the supported data types, using the specified
          *  options.
-         * 
+         *
          *  @param data:    Either an embedded asset class, a Bitmap, BitmapData, or a ByteArray
          *                  with ATF data.
          *  @param options: Specifies options about the texture settings, e.g. scale factor.
@@ -131,10 +131,10 @@ package starling.textures
         public static function fromData(data:Object, options:TextureOptions=null):Texture
         {
             var texture:Texture = null;
-            
+
             if (data is Bitmap)  data = (data as Bitmap).bitmapData;
             if (options == null) options = new TextureOptions();
-            
+
             if (data is Class)
             {
                 texture = fromEmbeddedAsset(data as Class,
@@ -246,11 +246,11 @@ package starling.textures
         public static function fromBitmapData(data:BitmapData, generateMipMaps:Boolean=true,
                                               optimizeForRenderToTexture:Boolean=false,
                                               scale:Number=1, format:String="bgra",
-                                              repeat:Boolean=false):Texture
+                                              repeat:Boolean=false,region:Rectangle = null, frame:Rectangle = null):Texture
         {
             var texture:Texture = Texture.empty(data.width / scale, data.height / scale, true, 
                                                 generateMipMaps, optimizeForRenderToTexture, scale,
-                                                format, repeat);
+                                                format, repeat, region, frame);
             
             texture.root.uploadBitmapData(data);
             texture.root.onRestore = function():void
@@ -315,8 +315,19 @@ package starling.textures
             
             return texture;
         }
-        
-        /** Creates an empty texture of a certain size. 
+        private static var _empty32:Texture;
+        private static var _empty256:Texture;
+        public static function get emptyTexture32():Texture
+        {
+            if(_empty32==null)    _empty32 = empty(32,32,false,false);
+            return _empty32;
+        }
+		public static function get emptyTexture256():Texture
+		{
+			if(_empty256==null)    _empty256 = empty(256,256,false,false);
+			return _empty256;
+		}
+        /** Creates an empty texture of a certain size.
          *  Beware that the texture can only be used after you either upload some color data
          *  ("texture.root.upload...") or clear the texture ("texture.root.clear()").
          *  
@@ -335,7 +346,7 @@ package starling.textures
          */
         public static function empty(width:Number, height:Number, premultipliedAlpha:Boolean=true,
                                      mipMapping:Boolean=true, optimizeForRenderToTexture:Boolean=false,
-                                     scale:Number=-1, format:String="bgra", repeat:Boolean=false):Texture
+                                     scale:Number=-1, format:String="bgra", repeat:Boolean=false,region:Rectangle = null, frame:Rectangle = null):Texture
         {
             if (scale <= 0) scale = Starling.contentScaleFactor;
             
@@ -379,7 +390,7 @@ package starling.textures
             if (actualWidth - origWidth < 0.001 && actualHeight - origHeight < 0.001)
                 return concreteTexture;
             else
-                return new SubTexture(concreteTexture, new Rectangle(0, 0, width, height), true);
+                return new SubTexture(concreteTexture, region ? region : new Rectangle(0, 0, width, height), true, frame);
         }
         
         /** Creates a texture that contains a region (in pixels) of another texture. The new

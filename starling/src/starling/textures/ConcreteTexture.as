@@ -65,7 +65,14 @@ package starling.textures
             mOnRestore = null;
             mDataUploaded = false;
         }
-        
+
+		public var relatedBitmapData:BitmapData;
+
+		public function upDateRelatedBitmapData():void
+		{
+			uploadBitmapData( relatedBitmapData );
+		}
+
         /** Disposes the TextureBase object. */
         public override function dispose():void
         {
@@ -73,7 +80,7 @@ package starling.textures
             this.onRestore = null; // removes event listener 
             super.dispose();
         }
-        
+
         // texture data upload
         
         /** Uploads a bitmap to the texture. The existing contents will be replaced.

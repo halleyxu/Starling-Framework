@@ -65,7 +65,13 @@ package starling.display
         {
             super();
         }
-        
+		private var _graphics :Graphics;
+
+		public function get graphics():Graphics
+		{
+			if(_graphics == null)	_graphics = new Graphics(this);
+			return _graphics;
+		}
         /** @inheritDoc */
         public override function dispose():void
         {

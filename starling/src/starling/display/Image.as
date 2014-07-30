@@ -92,12 +92,12 @@ package starling.display
             var frame:Rectangle = texture.frame;
             var width:Number  = frame ? frame.width  : texture.width;
             var height:Number = frame ? frame.height : texture.height;
-            
+
             mVertexData.setPosition(0, 0.0, 0.0);
             mVertexData.setPosition(1, width, 0.0);
             mVertexData.setPosition(2, 0.0, height);
-            mVertexData.setPosition(3, width, height); 
-            
+            mVertexData.setPosition(3, width, height);
+
             onVertexDataChanged();
         }
         
@@ -148,7 +148,7 @@ package starling.display
             
             mVertexDataCache.copyTransformedTo(targetData, targetVertexID, matrix, 0, 4);
         }
-        
+        public var autoResize:Boolean;
         /** The texture that is displayed on the quad. */
         public function get texture():Texture { return mTexture; }
         public function set texture(value:Texture):void 
@@ -160,6 +160,13 @@ package starling.display
             else if (value != mTexture)
             {
                 mTexture = value;
+				if(autoResize)
+				{
+					if(mTexture.width != width || mTexture.height != height)
+					{
+						readjustSize();
+					}
+				}
                 mVertexData.setPremultipliedAlpha(mTexture.premultipliedAlpha);
                 mVertexDataCache.setPremultipliedAlpha(mTexture.premultipliedAlpha, false);
                 onVertexDataChanged();
