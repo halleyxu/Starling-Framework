@@ -37,6 +37,23 @@ package starling.textures
         /** Helper object. */
         private static var sTexCoords:Point = new Point();
         private static var sMatrix:Matrix = new Matrix();
+
+
+        /**
+         * 这一帧上的代码
+         */
+        public var functions:Vector.<Function>;
+        /**
+         * 执行所有函数 2014-7-30
+         */
+        public function executeCode():void
+        {
+            if( functions == null ) return;
+            for each ( var fun:Function in functions )
+            {
+                fun();
+            }
+        }
         
         /** Creates a new subtexture containing the specified region of a parent texture.
          *
