@@ -69,7 +69,10 @@ package starling.display
 
 		public function get graphics():Graphics
 		{
-			if(_graphics == null)	_graphics = new Graphics(this);
+			if(_graphics == null)
+			{
+				_graphics = Shape(addChildAt(new Shape(),0)).graphics;
+			}
 			return _graphics;
 		}
         /** @inheritDoc */

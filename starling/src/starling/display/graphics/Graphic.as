@@ -138,6 +138,7 @@ package starling.display.graphics
 			maxBounds = null;
 			
 			hasValidatedGeometry = false;
+
 		}
 		
 		public function set material( value:IMaterial ):void

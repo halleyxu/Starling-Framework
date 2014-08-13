@@ -338,7 +338,7 @@ package starling.display
             var alpha:Number = parentAlpha * this.alpha;
             var numChildren:int = mChildren.length;
             var blendMode:String = support.blendMode;
-            
+
             for (var i:int=0; i<numChildren; ++i)
             {
                 var child:DisplayObject = mChildren[i];
