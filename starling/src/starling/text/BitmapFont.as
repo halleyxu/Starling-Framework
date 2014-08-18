@@ -11,9 +11,11 @@
 package starling.text
 {
     import flash.geom.Rectangle;
-    import flash.utils.Dictionary;
-    
-    import starling.display.Image;
+	import flash.utils.ByteArray;
+	import flash.utils.Dictionary;
+	import flash.utils.Endian;
+
+	import starling.display.Image;
     import starling.display.QuadBatch;
     import starling.display.Sprite;
     import starling.textures.Texture;
@@ -99,7 +101,24 @@ package starling.text
             
             if (fontXml) parseFontXml(fontXml);
         }
-        
+
+		/**
+		 * FontTextureForman ，支持异步上传
+		 * @param ftfBytes
+		 * @return
+		 */
+		public static function fromFtf(ftf :ByteArray): BitmapFont
+		{
+			ftf.endian = Endian.BIG_ENDIAN;
+			var fdLen : uint = ftf.readUnsignedShort();
+			var fntXML :XML = XML(  ftf.readUTFBytes(fdLen) );
+			var atfData:ByteArray = new ByteArray();
+			atfData.writeBytes(ftf,2 + fdLen,ftf.bytesAvailable);
+			var texture :Texture = Texture.fromAtfData(atfData);
+			var end :BitmapFont = new BitmapFont(texture , fntXML);
+			return end;
+		}
+
         /** Disposes the texture of the bitmap font! */
         public function dispose():void
         {

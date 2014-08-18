@@ -256,7 +256,7 @@ package starling.display.graphics
 		///////////////////////////////////
 		// Static helper methods
 		///////////////////////////////////
-		[inline]
+		[Inline]
 		protected static function createPolyLinePreAlloc( _line:Vector.<StrokeVertex>, 
 												vertices:Vector.<Number>, 
 												indices:Vector.<uint>, 
@@ -421,7 +421,7 @@ package starling.display.graphics
 		///////////////////////////////////
 		// Static helper methods - Old version of createPolyLine that does not use pre allocated vectors. Slower.
 		///////////////////////////////////
-		[inline]
+		[Inline]
 		protected static function createPolyLine( vertices:Vector.<StrokeVertex>, 
 												outputVertices:Vector.<Number>, 
 												outputIndices:Vector.<uint>, 

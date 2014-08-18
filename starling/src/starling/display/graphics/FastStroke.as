@@ -314,7 +314,7 @@ package starling.display.graphics
 			context.setVertexBufferAt(2, null);
 		} 
 	
-		[inline]
+		[Inline]
 		protected static function pushVerts(vertices:Vector.<Number>, _numControlPoints:Number, x1:Number, y1:Number, x2:Number, y2:Number, r:Number, g:Number, b:Number, a:Number) : void
 		{
 			var u:Number = 0; // Todo uv mapping in this case?
