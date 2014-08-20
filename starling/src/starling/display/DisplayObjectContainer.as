@@ -466,5 +466,76 @@ package starling.display
                     getChildEventListeners(children[i], eventType, listeners);
             }
         }
+
+
+
+
+
+
+
+
+		/**
+		 * 快速添加子集
+		 * @param child
+		 *
+		 */
+		public function addQuickChild(child:DisplayObject):void{
+			if(child.mParent){
+				child.mParent.removeQuickChild(child);
+			}
+			mChildren.push(child);
+			child.mParent = this;
+		}
+
+		/**
+		 * 快速添加子集
+		 * @param child
+		 * @param index
+		 * @return
+		 *
+		 */
+		public function addQuickChildAt(child:DisplayObject, index:int):DisplayObject
+		{
+			var numChildren:int = mChildren.length;
+
+			if (index >= 0 && index <= numChildren)
+			{
+				if(child.mParent){
+					child.mParent.removeQuickChild(child);
+				}
+
+				if (index == numChildren) mChildren.push(child);
+				else                      mChildren.splice(index, 0, child);
+
+				child.setParent(this);
+				child.mParent = this;
+
+				return child;
+			}
+			else
+			{
+				throw new RangeError("Invalid child index");
+			}
+		}
+
+		public function removeQuickChild(child:DisplayObject):void{
+			var index:int = mChildren.indexOf(child);
+			if(index != -1){
+				child.mParent = null;
+				mChildren.splice(index, 1);
+			}
+		}
+
+		/**
+		 * 快速移出所有子集
+		 */
+		public function clearChild():void{
+			var length:int = mChildren.length;
+			for (var i:int = 0; i < length; i++) {
+				mChildren[i].mParent = null;
+			}
+			//			mChildren.splice(0,length);
+			mChildren = new <DisplayObject>[];
+		}
     }
 }

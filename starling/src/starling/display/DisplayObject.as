@@ -128,24 +128,24 @@ package starling.display
 
         // members
 
-        private var mX:Number;
-        private var mY:Number;
+		public var mX:Number;
+		public var mY:Number;
         private var mPivotX:Number;
         private var mPivotY:Number;
-        private var mScaleX:Number;
-        private var mScaleY:Number;
-        private var mSkewX:Number;
-        private var mSkewY:Number;
+		public var mScaleX:Number;
+		public var mScaleY:Number;
+		public var mSkewX:Number;
+		public var mSkewY:Number;
         private var mRotation:Number;
         private var mAlpha:Number;
         private var mVisible:Boolean;
         private var mTouchable:Boolean;
         private var mBlendMode:String;
-        private var mName:String;
+		public var mName:String;
         private var mUseHandCursor:Boolean;
-        private var mParent:DisplayObjectContainer;
+		public var mParent:DisplayObjectContainer;
         private var mTransformationMatrix:Matrix;
-        private var mOrientationChanged:Boolean;
+        public var mOrientationChanged:Boolean;
         private var mFilter:FragmentFilter;
 
         /** Helper objects. */
