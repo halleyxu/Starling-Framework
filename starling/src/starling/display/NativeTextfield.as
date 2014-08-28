@@ -46,6 +46,7 @@ package starling.display
 		{
 			super();
 			tf = new TextField();
+			tf.mouseEnabled = false;
 		}
 
 

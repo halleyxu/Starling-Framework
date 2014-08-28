@@ -295,7 +295,6 @@ package starling.display
             if (forTouch && (!mVisible || !mTouchable)) return null;
 
             // otherwise, check bounding box
-			var bounds : *  = getBounds(this, sHelperRect);
             if (getBounds(this, sHelperRect).containsPoint(localPoint)) return this;
             else return null;
         }
