@@ -153,6 +153,10 @@ package starling.display
 		{
 			tf.width = value;
 		}
+
+		public function set text( text:String ):void {tf.text = text;}
+
+		public function get textHeight():Number {return tf.textHeight;}
 	}
 }
 
