@@ -62,7 +62,7 @@ package starling.display
                 mVertexData.setTexCoords(3, 1.0, 1.0);
                 
                 mTexture = texture;
-                mSmoothing = TextureSmoothing.BILINEAR;
+                mSmoothing = TextureSmoothing.NONE;
                 mVertexDataCache = new VertexData(4, pma);
                 mVertexDataCacheInvalid = true;
             }
@@ -188,6 +188,7 @@ package starling.display
         /** @inheritDoc */
         public override function render(support:RenderSupport, parentAlpha:Number):void
         {
+			if(mTexture==Texture.emptyTexture32 || mTexture==Texture.emptyTexture256)	return;
 			support.batchQuad(this, parentAlpha, mTexture, mSmoothing);
         }
     }

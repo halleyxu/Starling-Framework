@@ -243,7 +243,7 @@ package starling.textures
          *                  quality).
          *  @param repeat:  the repeat value of the texture. Only useful for power-of-two textures.
          */
-        public static function fromBitmapData(data:BitmapData, generateMipMaps:Boolean=true,
+        public static function fromBitmapData(data:BitmapData, generateMipMaps:Boolean=false,
                                               optimizeForRenderToTexture:Boolean=false,
                                               scale:Number=1, format:String="bgra",
                                               repeat:Boolean=false,region:Rectangle = null, frame:Rectangle = null):Texture
@@ -325,7 +325,7 @@ package starling.textures
             if(_empty32==null)
 			{
 				_empty32 = empty(32,32,false,false);
-				ConcreteTexture(_empty32).uploadBitmapData(_empty32BitmapData);
+				//ConcreteTexture(_empty32).uploadBitmapData(_empty32BitmapData);
 			}
             return _empty32;
         }
@@ -334,7 +334,7 @@ package starling.textures
 			if(_empty256==null)
 			{
 				_empty256 = empty(256,256,false,false);
-				ConcreteTexture(_empty256).uploadBitmapData(_empty256BitmapData);
+				//ConcreteTexture(_empty256).uploadBitmapData(_empty256BitmapData);
 			}
 			return _empty256;
 		}
