@@ -316,10 +316,7 @@ package starling.textures
             return texture;
         }
 
-        private static var _empty32BitmapData:BitmapData = new BitmapData(32,32,true);
-        private static var _empty256BitmapData:BitmapData = new BitmapData(256,256,true);
         private static var _empty32:Texture;
-        private static var _empty256:Texture;
         public static function get emptyTexture32():Texture
         {
             if(_empty32==null)
@@ -329,15 +326,6 @@ package starling.textures
 			}
             return _empty32;
         }
-		public static function get emptyTexture256():Texture
-		{
-			if(_empty256==null)
-			{
-				_empty256 = empty(256,256,false,false);
-				//ConcreteTexture(_empty256).uploadBitmapData(_empty256BitmapData);
-			}
-			return _empty256;
-		}
         /** Creates an empty texture of a certain size.
          *  Beware that the texture can only be used after you either upload some color data
          *  ("texture.root.upload...") or clear the texture ("texture.root.clear()").

@@ -210,10 +210,10 @@ package starling.display
                 mSyncRequired = false;
             }
         }
-        
+		private var previousProgram3D:Program3D;
         /** Renders the current batch with custom settings for model-view-projection matrix, alpha 
          *  and blend mode. This makes it possible to render batches that are not part of the 
-         *  display list. */ 
+         *  display list. */
         public function renderCustom(mvpMatrix:Matrix, parentAlpha:Number=1.0,
                                      blendMode:String=null):void
         {
@@ -229,8 +229,16 @@ package starling.display
             
             MatrixUtil.convertTo3D(mvpMatrix, sRenderMatrix);
             RenderSupport.setBlendFactors(pma, blendMode ? blendMode : this.blendMode);
-            
-            context.setProgram(getProgram(tinted));
+			/*
+			var p:Program3D = getProgram(tinted);
+			if(previousProgram3D!=null&&p!=previousProgram3D)
+			{
+				trace("Program3D Changed tinted:"+tinted);
+			}
+			previousProgram3D = p;
+			context.setProgram(p);
+			*/
+			context.setProgram(getProgram(tinted));
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, sRenderAlpha, 1);
             context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, sRenderMatrix, true);
             context.setVertexBufferAt(0, mVertexBuffer, VertexData.POSITION_OFFSET, 
@@ -718,7 +726,7 @@ package starling.display
             return program;
         }
         
-        private static function getImageProgramName(tinted:Boolean, mipMap:Boolean=true, 
+        private static function getImageProgramName(tinted:Boolean, mipMap:Boolean=true,
                                                     repeat:Boolean=false, format:String="bgra",
                                                     smoothing:String="bilinear"):String
         {
@@ -745,7 +753,7 @@ package starling.display
                 name = "QB_i." + bitField.toString(16);
                 sProgramNameCache[bitField] = name;
             }
-            
+            //trace(name)
             return name;
         }
     }

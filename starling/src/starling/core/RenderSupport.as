@@ -464,7 +464,6 @@ package starling.core
                                                      smoothing:String="bilinear"):String
         {
             var options:Array = ["2d", repeat ? "repeat" : "clamp"];
-            
             if (format == Context3DTextureFormat.COMPRESSED)
                 options.push("dxt1");
             else if (format == "compressedAlpha")

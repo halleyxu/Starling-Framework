@@ -93,14 +93,16 @@ package starling.display
             var width:Number  = frame ? frame.width  : texture.width;
             var height:Number = frame ? frame.height : texture.height;
 
-            mVertexData.setPosition(0, 0.0, 0.0);
-            mVertexData.setPosition(1, width, 0.0);
-            mVertexData.setPosition(2, 0.0, height);
-            mVertexData.setPosition(3, width, height);
-
-            onVertexDataChanged();
+			setSize(width, height);
         }
-        
+        public function setSize(w:int, h:int)
+		{
+			mVertexData.setPosition(0, 0.0, 0.0);
+			mVertexData.setPosition(1, w, 0.0);
+			mVertexData.setPosition(2, 0.0, h);
+			mVertexData.setPosition(3, w, h);
+			onVertexDataChanged();
+		}
         /** Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1]. */
         public function setTexCoords(vertexID:int, coords:Point):void
         {
@@ -188,7 +190,7 @@ package starling.display
         /** @inheritDoc */
         public override function render(support:RenderSupport, parentAlpha:Number):void
         {
-			if(mTexture==Texture.emptyTexture32 || mTexture==Texture.emptyTexture256)	return;
+			if(mTexture==Texture.emptyTexture32)	return;
 			support.batchQuad(this, parentAlpha, mTexture, mSmoothing);
         }
     }
