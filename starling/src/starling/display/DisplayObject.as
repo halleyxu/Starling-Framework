@@ -136,7 +136,7 @@ package starling.display
 		public var mScaleY:Number;
 		public var mSkewX:Number;
 		public var mSkewY:Number;
-        private var mRotation:Number;
+		public var mRotation:Number;
         private var mAlpha:Number;
         private var mVisible:Boolean;
         private var mTouchable:Boolean;
