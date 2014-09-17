@@ -87,10 +87,13 @@ package starling.display.graphics
 		
 		public override function getBounds(targetSpace:DisplayObject, resultRect:Rectangle=null):Rectangle
 		{
+			if(minBounds ){
+
 			minBounds.x = 0;
 			minBounds.y = 0;
 			maxBounds.x = _width;
 			maxBounds.y = _height;
+			}
 			return super.getBounds(targetSpace, resultRect);
 		}
 	}

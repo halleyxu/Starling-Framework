@@ -252,6 +252,9 @@ package starling.text
             var textFormat:TextFormat = new TextFormat(mFontName, 
                 mFontSize * scale, mColor, mBold, mItalic, mUnderline, null, null, hAlign);
             textFormat.kerning = mKerning;
+
+			// fix: chrome自带的release版flashplayer插件，在渲染LOW质量的文字时会渲染为无内容，查了好久 fuck google
+			Starling.current.nativeStage.quality = StageQuality.BEST;
             
             sNativeTextField.defaultTextFormat = textFormat;
             sNativeTextField.width = width;
@@ -267,7 +270,7 @@ package starling.text
             // we try embedded fonts first, non-embedded fonts are just a fallback
             if (sNativeTextField.textWidth == 0.0 || sNativeTextField.textHeight == 0.0)
                 sNativeTextField.embedFonts = false;
-            
+
             formatText(sNativeTextField, textFormat);
             
             if (mAutoScale)
@@ -297,7 +300,7 @@ package starling.text
             
             // if 'nativeFilters' are in use, the text field might grow beyond its bounds
             var filterOffset:Point = calculateFilterOffset(sNativeTextField, hAlign, vAlign);
-            
+
             // finally: draw text field to bitmap data
             var bitmapData:BitmapData = new BitmapData(width, height, true, 0x0);
             var drawMatrix:Matrix = new Matrix(1, 0, 0, 1,
@@ -313,7 +316,9 @@ package starling.text
                                          null, null, null, false, StageQuality.MEDIUM);
             else
                 bitmapData.draw(sNativeTextField, drawMatrix);
-            
+
+			Starling.current.nativeStage.quality = StageQuality.LOW;
+
             sNativeTextField.text = "";
             
             // update textBounds rectangle
