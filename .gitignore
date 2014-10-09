@@ -12,6 +12,7 @@
 bin-debug/
 bin-release/
 starling/doc/html/
+tests/libs/
 
 # Project property files
 .settings/
@@ -33,3 +34,8 @@ target/
 
 # OS X folders
 .DS_Store
+
+# FlashBuilder auto generated test runners
+FlexUnitApplication.as
+FlexUnitCompilerApplication.as
+.actionScriptProperties
