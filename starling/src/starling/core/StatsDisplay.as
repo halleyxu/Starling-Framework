@@ -27,7 +27,6 @@ package starling.core
     internal class StatsDisplay extends Sprite
     {
         private const UPDATE_INTERVAL:Number = 0.5;
-        
         private var mBackground:Quad;
         private var mTextField:TextField;
         
@@ -41,8 +40,8 @@ package starling.core
         /** Creates a new Statistics Box. */
         public function StatsDisplay()
         {
-            mBackground = new Quad(50, 25, 0x0);
-            mTextField = new TextField(48, 25, "", BitmapFont.MINI, BitmapFont.NATIVE_SIZE, 0xffffff);
+            mBackground = new Quad(100, 50, 0x0);
+            mTextField = new TextField(100, 50, "", BitmapFont.MINI, BitmapFont.NATIVE_SIZE, 0xffffff);
             mTextField.x = 2;
             mTextField.hAlign = HAlign.LEFT;
             mTextField.vAlign = VAlign.TOP;
@@ -86,21 +85,22 @@ package starling.core
             mFps = mTotalTime > 0 ? mFrameCount / mTotalTime : 0;
             mMemory = System.totalMemory * 0.000000954; // 1.0 / (1024*1024) to convert to MB
             
-            mTextField.text = "FPS: " + mFps.toFixed(mFps < 100 ? 1 : 0) + 
-                            "\nMEM: " + mMemory.toFixed(mMemory < 100 ? 1 : 0) +
-                            "\nDRW: " + (mTotalTime > 0 ? mDrawCount-2 : mDrawCount); // ignore self 
+            mTextField.text = "FPS: " + mFps.toFixed(mFps < 100 ? 1 : 0) +
+                            "\ndriverInfo: " + Starling.current.stage3D.context3D.driverInfo +
+							"\nMEM: " + mMemory.toFixed(mMemory < 100 ? 1 : 0) +
+                            "\nDRW: " + (mTotalTime > 0 ? mDrawCount-2 : mDrawCount); // ignore self
         }
-        
+
         public override function render(support:RenderSupport, parentAlpha:Number):void
         {
             // The display should always be rendered with two draw calls, so that we can
-            // always reduce the draw count by that number to get the number produced by the 
+            // always reduce the draw count by that number to get the number produced by the
             // actual content.
-            
+
             support.finishQuadBatch();
             super.render(support, parentAlpha);
         }
-        
+
         /** The number of Stage3D draw calls per second. */
         public function get drawCount():int { return mDrawCount; }
         public function set drawCount(value:int):void { mDrawCount = value; }
