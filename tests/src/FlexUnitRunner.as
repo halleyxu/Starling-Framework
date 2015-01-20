@@ -14,11 +14,13 @@ package
     import tests.display.DisplayObjectTest;
     import tests.display.MovieClipTest;
     import tests.display.QuadTest;
+    import tests.display.Sprite3DTest;
     import tests.events.EventTest;
     import tests.textures.TextureAtlasTest;
     import tests.textures.TextureTest;
     import tests.utils.AssetManagerTest;
     import tests.utils.ColorTest;
+    import tests.utils.MatrixUtilTest;
     import tests.utils.RectangleUtilTest;
     import tests.utils.UtilsTest;
     import tests.utils.VertexDataTest;
@@ -58,6 +60,9 @@ package
             testsToRun.push(tests.display.MovieClipTest);
             testsToRun.push(tests.utils.RectangleUtilTest);
             testsToRun.push(tests.utils.VertexDataTest);
+            testsToRun.push(tests.utils.MatrixUtilTest);
+            testsToRun.push(tests.utils.MathUtilTest);
+            testsToRun.push(tests.display.Sprite3DTest);
             return testsToRun;
         }
     }

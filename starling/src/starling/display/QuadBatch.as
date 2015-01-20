@@ -17,6 +17,7 @@ package starling.display
     import flash.display3D.IndexBuffer3D;
     import flash.display3D.Program3D;
     import flash.display3D.VertexBuffer3D;
+    import flash.errors.IllegalOperationError;
     import flash.geom.Matrix;
     import flash.geom.Matrix3D;
     import flash.geom.Rectangle;
@@ -32,7 +33,6 @@ package starling.display
     import starling.filters.FragmentFilterMode;
     import starling.textures.Texture;
     import starling.textures.TextureSmoothing;
-    import starling.utils.MatrixUtil;
     import starling.utils.VertexData;
     
     use namespace starling_internal;
@@ -210,11 +210,11 @@ package starling.display
                 mSyncRequired = false;
             }
         }
-		private var previousProgram3D:Program3D;
+        
         /** Renders the current batch with custom settings for model-view-projection matrix, alpha 
          *  and blend mode. This makes it possible to render batches that are not part of the 
-         *  display list. */
-        public function renderCustom(mvpMatrix:Matrix, parentAlpha:Number=1.0,
+         *  display list. */ 
+        public function renderCustom(mvpMatrix:Matrix3D, parentAlpha:Number=1.0,
                                      blendMode:String=null):void
         {
             if (mNumQuads == 0) return;
@@ -227,20 +227,11 @@ package starling.display
             sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = pma ? parentAlpha : 1.0;
             sRenderAlpha[3] = parentAlpha;
             
-            MatrixUtil.convertTo3D(mvpMatrix, sRenderMatrix);
             RenderSupport.setBlendFactors(pma, blendMode ? blendMode : this.blendMode);
-			/*
-			var p:Program3D = getProgram(tinted);
-			if(previousProgram3D!=null&&p!=previousProgram3D)
-			{
-				trace("Program3D Changed tinted:"+tinted);
-			}
-			previousProgram3D = p;
-			context.setProgram(p);
-			*/
-			context.setProgram(getProgram(tinted));
+            
+            context.setProgram(getProgram(tinted));
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 0, sRenderAlpha, 1);
-            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, sRenderMatrix, true);
+            context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 1, mvpMatrix, true);
             context.setVertexBufferAt(0, mVertexBuffer, VertexData.POSITION_OFFSET, 
                                       Context3DVertexBufferFormat.FLOAT_2); 
             
@@ -317,7 +308,7 @@ package starling.display
             mSyncRequired = true;
             mNumQuads++;
         }
-        
+
         /** Adds another QuadBatch to this batch. Just like the 'addQuad' method, you have to
          *  make sure that you only add batches with an equal state. */
         public function addQuadBatch(quadBatch:QuadBatch, parentAlpha:Number=1.0, 
@@ -435,7 +426,20 @@ package starling.display
             
             mSyncRequired = true;
         }
-        
+
+        /** Replaces a quad or image at a certain index with another one. */
+        public function setQuad(quadID:Number, quad:Quad):void
+        {
+            var matrix:Matrix = quad.transformationMatrix;
+            var alpha:Number  = quad.alpha;
+            var vertexID:int  = quadID * 4;
+
+            quad.copyVertexDataTransformedTo(mVertexData, vertexID, matrix);
+            if (alpha != 1.0) mVertexData.scaleAlpha(vertexID, alpha, 4);
+
+            mSyncRequired = true;
+        }
+
         /** Calculates the bounds of a specific quad, optionally transformed by a matrix.
          *  If you pass a 'resultRect', the result will be stored in this rectangle
          *  instead of creating a new object. */
@@ -469,7 +473,7 @@ package starling.display
                 {
                     support.finishQuadBatch();
                     support.raiseDrawCount();
-                    renderCustom(support.mvpMatrix, alpha * parentAlpha, support.blendMode);
+                    renderCustom(support.mvpMatrix3D, alpha * parentAlpha, support.blendMode);
                 }
             }
         }
@@ -486,6 +490,30 @@ package starling.display
             compileObject(object, quadBatches, -1, new Matrix());
         }
         
+        /** Naively optimizes a list of batches by merging all that have an identical state.
+         *  Naturally, this will change the z-order of some of the batches, so this method is
+         *  useful only for specific use-cases. */
+        public static function optimize(quadBatches:Vector.<QuadBatch>):void
+        {
+            var batch1:QuadBatch, batch2:QuadBatch;
+            for (var i:int=0; i<quadBatches.length; ++i)
+            {
+                batch1 = quadBatches[i];
+                for (var j:int=i+1; j<quadBatches.length; )
+                {
+                    batch2 = quadBatches[j];
+                    if (!batch1.isStateChange(batch2.tinted, 1.0, batch2.texture,
+                                              batch2.smoothing, batch2.blendMode))
+                    {
+                        batch1.addQuadBatch(batch2);
+                        batch2.dispose();
+                        quadBatches.splice(j, 1);
+                    }
+                    else ++j;
+                }
+            }
+        }
+
         private static function compileObject(object:DisplayObject, 
                                               quadBatches:Vector.<QuadBatch>,
                                               quadBatchID:int,
@@ -494,6 +522,9 @@ package starling.display
                                               blendMode:String=null,
                                               ignoreCurrentFilter:Boolean=false):int
         {
+            if (object is Sprite3D)
+                throw new IllegalOperationError("Sprite3D objects cannot be flattened");
+
             var i:int;
             var quadBatch:QuadBatch;
             var isRootObject:Boolean = false;
@@ -726,7 +757,7 @@ package starling.display
             return program;
         }
         
-        private static function getImageProgramName(tinted:Boolean, mipMap:Boolean=true,
+        private static function getImageProgramName(tinted:Boolean, mipMap:Boolean=true, 
                                                     repeat:Boolean=false, format:String="bgra",
                                                     smoothing:String="bilinear"):String
         {
@@ -753,7 +784,7 @@ package starling.display
                 name = "QB_i." + bitField.toString(16);
                 sProgramNameCache[bitField] = name;
             }
-            //trace(name)
+            
             return name;
         }
     }
