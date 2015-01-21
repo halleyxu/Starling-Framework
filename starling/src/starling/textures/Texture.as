@@ -291,7 +291,40 @@ package starling.textures
             
             return concreteTexture;
         }
-        
+
+        /**
+         * 同上面的方法拷下来； 将来更新starling，从上面再考一次更改
+         * @param data
+         * @param scale
+         * @param useMipMaps
+         * @param async
+         * @param repeat
+         * @param offset
+         * @return
+         */
+        public static function fromAtfDataWithOffset(data:ByteArray, scale:Number=1, useMipMaps:Boolean=true,
+                                                     async:Function=null, repeat:Boolean=false , offset : int =0):Texture
+        {
+            var context:Context3D = Starling.context;
+            if (context == null) throw new MissingContextError();
+
+            var atfData:AtfData = new AtfData(data,offset);
+            var nativeTexture:flash.display3D.textures.Texture = context.createTexture(
+                    atfData.width, atfData.height, atfData.format, false);
+            var concreteTexture:ConcreteTexture = new ConcreteTexture(nativeTexture, atfData.format,
+                    atfData.width, atfData.height, useMipMaps && atfData.numTextures > 1,
+                    false, false, scale, repeat);
+
+            concreteTexture.uploadAtfData(data, offset, async);
+            concreteTexture.onRestore = function():void
+            {
+                concreteTexture.uploadAtfData(data, offset);
+            };
+
+            return concreteTexture;
+        }
+
+
         /** Creates a texture with a certain size and color.
          *  
          *  @param width   in points; number of pixels depends on scale parameter

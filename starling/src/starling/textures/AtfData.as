@@ -22,14 +22,16 @@ package starling.textures
         private var mNumTextures:int;
         private var mIsCubeMap:Boolean;
         private var mData:ByteArray;
-        
+
+        private var mOffset : int =0;
         /** Create a new instance by parsing the given byte array. */
-        public function AtfData(data:ByteArray)
+        public function AtfData(data:ByteArray,offset : int =0)
         {
-            if (!isAtfData(data)) throw new ArgumentError("Invalid ATF data");
+            mOffset = offset;
+            if (!isAtfData(data,offset)) throw new ArgumentError("Invalid ATF data");
             
-            if (data[6] == 255) data.position = 12; // new file version
-            else                data.position =  6; // old file version
+            if (data[6+offset] == 255) data.position = 12+offset; // new file version
+            else                data.position =  6+offset; // old file version
 
             var format:uint = data.readUnsignedByte();
             switch (format & 0x7f)
@@ -62,12 +64,12 @@ package starling.textures
         }
 
         /** Checks the first 3 bytes of the data for the 'ATF' signature. */
-        public static function isAtfData(data:ByteArray):Boolean
+        public static function isAtfData(data:ByteArray,offset:int=0):Boolean
         {
-            if (data.length < 3) return false;
+            if (data.length-offset < 3) return false;
             else
             {
-                var signature:String = String.fromCharCode(data[0], data[1], data[2]);
+                var signature:String = String.fromCharCode(data[0+offset], data[1+offset], data[2+offset]);
                 return signature == "ATF";
             }
         }
